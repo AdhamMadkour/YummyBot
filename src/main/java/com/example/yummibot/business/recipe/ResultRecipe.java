@@ -1,4 +1,4 @@
-package com.example.yummibot;
+package com.example.yummibot.business.recipe;
 
 import lombok.Data;
 
