@@ -1,5 +1,6 @@
-package com.example.yummibot;
+package com.example.yummibot.business.recipe;
 
+import com.example.yummibot.business.recipe.ResultRecipe;
 import lombok.Data;
 
 import java.util.List;
