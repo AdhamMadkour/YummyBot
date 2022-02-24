@@ -29,6 +29,9 @@ public class SpoonacularClient {
     @Value("${spoonacular.api.key}")
     private String spoonacularApiKey;
 
+    @Value("${spoonacular.api.search-recipe}")
+    private String spoonacularSearch;
+
     @Value("${youtube.api.base-url}")
     private String youtubeBaseUrl;
 
@@ -37,6 +40,7 @@ public class SpoonacularClient {
 
     @Value("${youtube.api.key}")
     private String youtubeApiKey;
+
 
     private final RestTemplate restTemplate;
 
@@ -62,10 +66,14 @@ public class SpoonacularClient {
     private String getSpoonacularMealTypeRecipe(String mealType) {
         return baseUrl + spoonacularRandomRecipeUrl +"?apiKey="+ spoonacularApiKey + "&number=10&tags=" + mealType;
     }
-
+    private String getRecipeIngredients(String id){
+        //https://api.spoonacular.com/recipes/659927/ingredientWidget.json?apiKey=b7f84234d75d4f7ba1de453a856c3fe8
+        return baseUrl+spoonacularSearch+"/"+id+"/ingredientWidget.json?apiKey="+spoonacularApiKey;
+    }
     private String getYoutubeSearchResult(String recipe) {
         return youtubeBaseUrl + youtubeSearchUrl + "?key=" + youtubeApiKey + "&q=" + recipe;
     }
+
 
     public List<ResultRecipe> getRecipes(String name, String offset) {
         ResponseEntity<Results> exchange = restTemplate.exchange(
@@ -134,6 +142,20 @@ public class SpoonacularClient {
             return new ArrayList<>();
         } else {
             return exchange.getBody().getVideoById();
+        }
+    }
+    public List<Ingredients> ingredientsResults(String id) {
+
+        ResponseEntity<Results> exchange = restTemplate.exchange(
+              getRecipeIngredients(id),
+                HttpMethod.GET,
+                getHeaders(),
+                Results.class
+        );
+        if (Objects.isNull(exchange.getBody())) {
+            return new ArrayList<>();
+        } else {
+            return exchange.getBody().getIngredients();
         }
     }
 
