@@ -18,7 +18,7 @@ public class APISearchController {
 
     @GetMapping("/{name}/{offset}")
     public List<ResultRecipe> Result(@PathVariable(name = "name") String name, @PathVariable(name = "offset") String offset) {
-        return spoonacularClient.getRecipes(name,offset);
+        return spoonacularClient.getRecipes(name, offset);
     }
 
 
@@ -48,8 +48,9 @@ public class APISearchController {
     public List<YoutubeSearch> youtubeSearches(@PathVariable(name = "recipe") String recipe) {
         return spoonacularClient.getRecipeVideos(recipe);
     }
+
     @GetMapping("/ingredients/{id}")
-    public List<Ingredients>showIngredients(@PathVariable(name = "id")String id){
+    public List<Ingredients> showIngredients(@PathVariable(name = "id") String id) {
         return spoonacularClient.ingredientsResults(id);
     }
 

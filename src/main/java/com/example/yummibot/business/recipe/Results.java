@@ -11,6 +11,4 @@ public class Results {
     private int offset;
     private int number;
     private int totalResults;
-
-
 }
