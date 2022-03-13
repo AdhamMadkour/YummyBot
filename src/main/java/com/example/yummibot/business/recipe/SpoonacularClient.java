@@ -2,6 +2,7 @@ package com.example.yummibot.business.recipe;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,6 +42,9 @@ public class SpoonacularClient {
     @Value("${youtube.api.key}")
     private String youtubeApiKey;
 
+    @Value("${spoonacular.api.search-fruits}")
+    private String fruitSearch;
+
 
     private final RestTemplate restTemplate;
 
@@ -51,12 +55,11 @@ public class SpoonacularClient {
     }
 
     private String getSpoonacularComplexSearchUrl(String name, String offset) {
-        // https://api.spoonacular.com/recipes/complexSearch21b6a1afab9646f7a125f7ba0331f024&query=Meats&number=1
-        return baseUrl + spoonacularComplexSearchUrl +"?apiKey="+ spoonacularApiKey + "&query=" + name + "&number=10&offset=" + offset;
+        return baseUrl + spoonacularComplexSearchUrl +"?apiKey="+ spoonacularApiKey + "&query=" + name + "&number=9&offset=" + offset;
     }
 
     private String getSpoonacularComplexSearchUrlForBelowTwenty(String offset) {
-        return baseUrl + spoonacularComplexSearchUrl +"?apiKey="+ spoonacularApiKey + "&maxReadyTime=20&number=10&offset=" + offset;
+        return baseUrl + spoonacularComplexSearchUrl +"?apiKey="+ spoonacularApiKey + "&maxReadyTime=20&number=9&offset=" + offset;
     }
 
     private String getSpoonacularRandomRecipeUrl() {
@@ -64,14 +67,16 @@ public class SpoonacularClient {
     }
 
     private String getSpoonacularMealTypeRecipe(String mealType) {
-        return baseUrl + spoonacularRandomRecipeUrl +"?apiKey="+ spoonacularApiKey + "&number=10&tags=" + mealType;
+        return baseUrl + spoonacularRandomRecipeUrl +"?apiKey="+ spoonacularApiKey + "&number=9&tags=" + mealType;
     }
     private String getRecipeIngredients(String id){
-        //https://api.spoonacular.com/recipes/659927/ingredientWidget.json?apiKey=b7f84234d75d4f7ba1de453a856c3fe8
         return baseUrl+spoonacularSearch+"/"+id+"/ingredientWidget.json?apiKey="+spoonacularApiKey;
     }
     private String getYoutubeSearchResult(String recipe) {
         return youtubeBaseUrl + youtubeSearchUrl + "?key=" + youtubeApiKey + "&q=" + recipe;
+    }
+    private String getFruitsURL(){
+        return baseUrl+spoonacularSearch+fruitSearch+"&number=9&apiKey="+spoonacularApiKey;
     }
 
 
@@ -82,6 +87,10 @@ public class SpoonacularClient {
                 getHeaders(),
                 Results.class
         );
+
+//        exchange.getStatusCode()==402{
+//            throw  IllegalArgumentException("quote.///retruy")
+//        }
         if (Objects.isNull(exchange.getBody())) {
             return new ArrayList<>();
         } else {
@@ -145,7 +154,6 @@ public class SpoonacularClient {
         }
     }
     public List<Ingredients> ingredientsResults(String id) {
-
         ResponseEntity<Results> exchange = restTemplate.exchange(
               getRecipeIngredients(id),
                 HttpMethod.GET,
@@ -158,5 +166,17 @@ public class SpoonacularClient {
             return exchange.getBody().getIngredients();
         }
     }
-
+    public List<ResultRecipe> getFruits() {
+        ResponseEntity<List<ResultRecipe>> exchange = restTemplate.exchange(
+                getFruitsURL(),
+                HttpMethod.GET,
+                getHeaders(),
+                new ParameterizedTypeReference<List<ResultRecipe>>() {}
+        );
+        if (Objects.isNull(exchange.getBody())) {
+            return new ArrayList<>();
+        } else {
+            return exchange.getBody();
+        }
+    }
 }

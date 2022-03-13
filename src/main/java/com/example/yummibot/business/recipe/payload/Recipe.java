@@ -22,7 +22,7 @@ public class Recipe {
 
     public Recipe(ResultRecipe resultRecipe) {
         String ID = String.valueOf(resultRecipe.getId());
-        String go = "https://api.spoonacular.com/recipes/" + ID + "/card?apiKey=b7f84234d75d4f7ba1de453a856c3fe8";
+        String go = "https://api.spoonacular.com/recipes/" + ID + "/card?apiKey=924a441ec2464749829dd4c9f5f4e5ac";
         RestTemplate restTemplate = restTemplate(new RestTemplateBuilder());
         Recipe recipe = restTemplate.exchange(go, HttpMethod.GET, setHeaders(), Recipe.class).getBody();
         url = recipe.url;

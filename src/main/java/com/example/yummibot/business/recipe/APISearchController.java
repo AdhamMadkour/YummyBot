@@ -1,11 +1,9 @@
 package com.example.yummibot.business.recipe;
-
 import com.example.yummibot.business.recipe.payload.Recipe;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -52,6 +50,10 @@ public class APISearchController {
     @GetMapping("/ingredients/{id}")
     public List<Ingredients> showIngredients(@PathVariable(name = "id") String id) {
         return spoonacularClient.ingredientsResults(id);
+    }
+    @GetMapping("/Fruits")
+    public List<ResultRecipe> showFruits() {
+        return spoonacularClient.getFruits();
     }
 
 
